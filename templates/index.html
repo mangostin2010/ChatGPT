@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css"> -->
+    <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    
+    <!-- MathJax 설정을 먼저 정의 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- 왼쪽 사이드바 -->
+        <aside class="sidebar">
+            <button class="sidebar-close-btn" aria-label="사이드바 닫기">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="sidebar-header">
+                <button class="new-chat-btn">
+                    <i class="fas fa-edit"></i> 새 채팅
+                </button>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="채팅 검색">
+                </div>
+            </div>
+            <div class="sidebar-history">
+                <h3>채팅</h3>
+                <ul id="chat-list">
+                </ul>
+            </div>
+            <div class="sidebar-footer">
+                <button id="theme-toggle-btn" title="테마 변경" style="font-size:20px; background:none; border:none; cursor:pointer;">
+                    🌙
+                </button>
+                <div class="user-profile-sidebar">
+                    <div class="user-avatar-small">J</div>
+                    <span>User Name</span>
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 오른쪽 채팅 영역 -->
+        <main class="chat-area">
+            <header class="chat-header">
+                <!-- 모바일에서만 보이는 햄버거 버튼 -->
+                <button class="sidebar-toggle-btn" aria-label="사이드바 열기">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="model-selector" tabindex="0">
+                    <span id="selected-model-label">GPT-4.1</span>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="model-dropdown" style="display:none;">
+                        <!-- JS에서 동적으로 채움 -->
+                    </div>
+                </div>
+                <div class="user-profile-main">
+                    J
+                </div>
+            </header>
+
+            <div class="chat-messages-container">
+                <div class="initial-prompt">
+                    <h1 id="initial-prompt-text">무슨 작업을 하고 계세요?</h1>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <div class="input-wrapper">
+                    <textarea id="chat-input" placeholder="무엇이든 물어보세요" rows="1"></textarea>
+                    <button class="input-icon-btn send-btn"><i class="fas fa-arrow-up"></i></button>
+                </div>
+                <p class="disclaimer">AI는 실수를 할 수 있습니다. 중요한 정보는 확인하세요.</p>
+            </div>
+        </main>
+    </div>
+    <script>
+        window.INITIAL_CHAT_ID = "{{ chat_id | default('') }}";
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
