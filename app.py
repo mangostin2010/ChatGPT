@@ -25,6 +25,20 @@ EXOML_GENID_URL = "https://exomlapi.com/api/genid"
 EXOML_CHAT_URL = "https://exomlapi.com/api/chat"
 EXOML_ANTIBOT_ID = "bB0zbFxpjIvh3CzdYBtxyxWnAhhe5a4K-de37df91"
 
+
+
+MODEL_LIST = [
+    {"label": "o4-mini", "desc": "빠르고 효율적인 추론 모델", "value": "o4-mini"},
+    {"label": "o3", "desc": "가장 강력한 추론 모델", "value": "o3"},
+    {"label": "GPT-4.5 Preview", "desc": "가장 크고 강력한 모델", "value": "gpt-4.5-preview"},
+    {"label": "GPT-4.1", "desc": "복잡한 작업을 위한 Flagship 모델", "value": "gpt-4.1"},
+    {"label": "GPT-4o", "desc": "ChatGPT에 사용된 GPT-4o 모델", "value": "gpt-4o"},
+    {"label": "GPT-4o Search", "desc": "웹 검색용 GPT 모델", "value": "gpt-4o-search-preview"},
+]
+
+
+
+
 def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -101,10 +115,10 @@ def index():
     user_token = request.cookies.get("user_token")
     if not user_token:
         user_token = str(uuid.uuid4())
-        resp = make_response(render_template("index.html"))
+        resp = make_response(render_template("index.html", models=MODEL_LIST))
         resp.set_cookie("user_token", user_token, max_age=60*60*24*365*5)
         return resp
-    return render_template("index.html")
+    return render_template("index.html", models=MODEL_LIST)
 
 def make_exoml_chat_id(timestamp):
     rand9 = ''.join(random.choices(string.ascii_lowercase + string.digits, k=9))
@@ -193,7 +207,7 @@ Instructions:
         "model": model,
     }
 
-    if model == "gpt-4.1aaa":
+    if model == "gpt-4.1":
         # 1. genid 요청
         genid_payload = {
             "antiBotId": EXOML_ANTIBOT_ID,
